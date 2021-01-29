@@ -16,19 +16,27 @@ const serializeBarber = barber => ({
 });
 
 //name, location, website_url, description, phone, email;
-
 barberRouter
   .route('/')
   .get((req, res, next) => {
     const knexInstance = req.app.get('db');
-    BarbersService.getAllBarbers(knexInstance).then(barbersdb => {
-      res.json(barbersdb.map(serializeBarber));
-    });
+    const { state } = req.query;
+    if (!state) {
+      BarbersService.getAllBarbers(knexInstance)
+        .then(barbersdb => {
+          res.json(barbersdb.map(serializeBarber));
+        })
+        .catch(next);
+    } else {
+      BarbersService.getBarbersByState(knexInstance, state)
+        .then(barbersdb => {
+          res.json(barbersdb.map(serializeBarber));
+        })
+        .catch(next);
+    }
   })
-
   .post(bodyParser, (req, res, next) => {
     // const knexInstance = req.app.post('db');
-
     const {
       barber_name,
       barber_location,
@@ -39,49 +47,58 @@ barberRouter
     const newBarber = {
       barber_name,
       barber_location,
-      services,
       phone_number,
       email,
     };
 
-    // for (const [key, value] of Object.entries(newBarber)) {
-    //   if (!barber_name || !barber_location || (!phone_number && !!email)) {
-    //     return res.status(400).json({
-    //       error: { message: `Missing '${key}' in request body` },
-    //     });
-    //   }
-    // }
-
     if (!barber_name) {
       // logger.error(`Name is required`);
-      return res.status(400).send('need name');
+      return res.status(400).json('need name');
     }
     if (!barber_location) {
       // logger.error(`Location is required`);
-      return res.status(400).send('need location');
+      return res.status(400).json('need location');
     }
     if (!phone_number && !email) {
       // logger.error(`Phone number or email is required`);
-      return res.status(400).send('need one method of contact');
+      return res.status(400).json('need one method of contact');
     }
     const id = uuid();
     BarbersService.insertBarber(req.app.get('db'), newBarber)
       .then(barber => {
-        res
-          .status(201)
-          .location(`http://localhost:8000/barbers/${id}`)
-          .json(barber);
+        let { barber_id } = barber;
+        let newServices = [];
+        for (const item of services) {
+          newServices.push({
+            barber_id,
+            services_id: item,
+          });
+        }
+
+        BarbersService.insertBarberServices(
+          req.app.get('db'),
+          newServices
+        ).then(() => {
+          res
+            .status(201)
+            .location(`http://localhost:8000/api/barbers/${id}`)
+            .json(barber);
+        });
       })
       .catch(next);
   });
 
 // then(barbersdb => {
 // res.json(barbersdb.map(serializeBarber));
+barberRouter.route('/:alskdjfalsjd').delete((req, res) => {
+  return res.json('hello world!');
+});
 
 barberRouter
   .route('/:barber_id')
   .all((req, res, next) => {
     const knexInstance = req.app.get('db');
+    console.log('params.barber_id', req.params.barber_id);
     BarbersService.getById(knexInstance, req.params.barber_id)
       .then(barber => {
         if (!barber) {
@@ -95,14 +112,15 @@ barberRouter
       .catch(next);
   })
   .get((req, res, next) => {
-    res.json({
-      barber_id: res.barber.barber_id,
-      barber_name: res.barber.barber_name,
-      barber_location: res.barber.barber_location, //sanitize title
-      services: res.barber.services, //sanitize content
-      phone_number: res.barber.phone_number,
-      email: res.barber.email,
-    });
+    res.json(serializeBarber(res.barber));
+    //   {
+    //   barber_id: res.barber.barber_id,
+    //   barber_name: res.barber.barber_name,
+    //   barber_location: res.barber.barber_location,
+    //   services: res.barber.services,
+    //   phone_number: res.barber.phone_number,
+    //   email: res.barber.email,
+    // });
   })
 
   .delete((req, res, next) => {
@@ -126,7 +144,6 @@ barberRouter
       barber_id,
       barber_name,
       barber_location,
-      services,
       phone_number,
       email,
     };
@@ -144,6 +161,7 @@ barberRouter
       req.params.barber_id,
       barberToUpdate
     )
+
       .then(numRowsAffected => {
         res.status(204).end();
       })

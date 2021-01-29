@@ -3,4 +3,4 @@ VALUES
 ('Sensory Hours'),
 ('Scissor Cuts'),
 ('Longer Appointment Times'),
-('Home Haircuts')
+('Home Haircuts');
