@@ -36,7 +36,7 @@ barberRouter
     }
   })
   .post(bodyParser, (req, res, next) => {
-    // const knexInstance = req.app.post('db');
+    const knexInstance = req.app.get('db');
     const {
       barber_name,
       barber_location,
@@ -64,7 +64,7 @@ barberRouter
       return res.status(400).json('need one method of contact');
     }
     const id = uuid();
-    BarbersService.insertBarber(req.app.get('db'), newBarber)
+    BarbersService.insertBarber(knexInstance, newBarber)
       .then(barber => {
         let { barber_id } = barber;
         let newServices = [];
@@ -75,24 +75,17 @@ barberRouter
           });
         }
 
-        BarbersService.insertBarberServices(
-          req.app.get('db'),
-          newServices
-        ).then(() => {
-          res
-            .status(201)
-            .location(`http://localhost:8000/api/barbers/${id}`)
-            .json(barber);
-        });
+        BarbersService.insertBarberServices(knexInstance, newServices).then(
+          () => {
+            res
+              .status(201)
+              .location(`http://localhost:8000/api/barbers/${id}`)
+              .json(barber);
+          }
+        );
       })
       .catch(next);
   });
-
-// then(barbersdb => {
-// res.json(barbersdb.map(serializeBarber));
-barberRouter.route('/:alskdjfalsjd').delete((req, res) => {
-  return res.json('hello world!');
-});
 
 barberRouter
   .route('/:barber_id')
@@ -124,7 +117,8 @@ barberRouter
   })
 
   .delete((req, res, next) => {
-    BarbersService.deleteBarber(req.app.get('db'), req.params.barber_id)
+    const knexInstance = req.app.get('db');
+    BarbersService.deleteBarber(knexInstance, req.params.barber_id)
       .then(() => {
         res.status(204).end();
         console.log('deleting item at ID', req.params.barber_id);
@@ -132,6 +126,7 @@ barberRouter
       .catch(next);
   })
   .patch(bodyParser, (req, res, next) => {
+    const knexInstance = req.app.get('db');
     const {
       barber_id,
       barber_name,
@@ -157,11 +152,10 @@ barberRouter
       });
     }
     BarbersService.updateBarber(
-      req.app.get('db'),
+      knexInstance,
       req.params.barber_id,
       barberToUpdate
     )
-
       .then(numRowsAffected => {
         res.status(204).end();
       })

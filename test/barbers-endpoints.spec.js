@@ -20,6 +20,20 @@ describe('Barbers Endpoints', function () {
 
   afterEach('cleanup', () => db.raw('TRUNCATE barber_services, barber'));
 
+  describe(`GET /api/barbers`, () => {
+    context(`Given there are barbers in the database`, () => {
+      const testBarbers = makeBarbersArray();
+
+      beforeEach('insert barbers', () => {
+        return db.into('barber').insert(testBarbers).returning('*');
+      });
+
+      it(`Responds with 200 and a list of all of the barbers`, () => {
+        return supertest(app).get('/api/barbers').expect(200, testBarbers);
+      });
+    });
+  });
+
   describe(`GET /?state=barber_location`, () => {
     context(`Given no barbers`, () => {
       it(`responds with 200 and an empty list`, () => {
@@ -60,6 +74,7 @@ describe('Barbers Endpoints', function () {
       });
     });
   });
+
   describe(`GET /:barber_id`, () => {
     context('Given there are barbers in the database', () => {
       const testBarbers = makeBarbersArray();
@@ -113,4 +128,34 @@ describe('Barbers Endpoints', function () {
       });
     });
   });
+
+  describe(`DELETE /api/barbers/:barber_id`, () => {
+    context(`Given there are articles in the database`, () => {
+      const testBarbers = makeBarbersArray();
+
+      beforeEach('insert barbers', () => {
+        return db.into('barber').insert(testBarbers).returning('*');
+      });
+
+      it('responds with 204 and removes the article', () => {
+        const barberToRemove = 2;
+        const expectedBarbers = testBarbers.filter(
+          barber => barber.barber_id !== barberToRemove
+        );
+        return supertest(app)
+          .delete(`/api/barbers/${barberToRemove}`)
+          .expect(204)
+          .then(res =>
+            supertest(app).get(`/api/barbers`).expect(expectedBarbers)
+          );
+      });
+    });
+  });
 });
+
+//C//post
+//R//get all
+//R//get by id
+//R//get by state
+//U//patch
+//D//delete
