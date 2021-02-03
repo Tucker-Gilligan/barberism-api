@@ -15,7 +15,10 @@
     "postdeploy": "npm run migrate:production"
   },
   "keywords": [],
-  "author": "",
+  "engines": {
+    "node": "12.20.1"
+  },
+  "author": "Tucker Gilligan",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",

@@ -75,7 +75,9 @@ barberRouter
           () => {
             res
               .status(201)
-              .location(`http://localhost:8000/api/barbers/${id}`)
+              .location(
+                `postgres://rxdtymkllcwxov:649b33d1611ad77c37201da600b3633f9d2fac9db9ed2b52ccbeef89a15ab8b1@ec2-3-220-193-133.compute-1.amazonaws.com:5432/d5gvr8tjunt957/${id}`
+              )
               .json(barber);
           }
         );
