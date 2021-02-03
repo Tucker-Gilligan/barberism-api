@@ -73,10 +73,7 @@ barberRouter
 
         BarbersService.insertBarberServices(knexInstance, newServices).then(
           () => {
-            res
-              .status(201)
-              .location(path.posix.join(req.originalUrl, `/`))
-              .json(barber);
+            res.status(201).location('/').json(barber);
           }
         );
       })
