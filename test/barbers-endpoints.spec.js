@@ -29,7 +29,14 @@ describe('Barbers Endpoints', function () {
       });
 
       it(`Responds with 200 and a list of all of the barbers`, () => {
-        return supertest(app).get('/api/barbers').expect(200, testBarbers);
+        return supertest(app)
+          .get('/api/barbers')
+          .expect(
+            200,
+            testBarbers.map(barber => {
+              return { ...barber, services: null };
+            })
+          );
       });
     });
   });
@@ -145,7 +152,13 @@ describe('Barbers Endpoints', function () {
           .delete(`/api/barbers/${barberToRemove}`)
           .expect(204)
           .then(res =>
-            supertest(app).get(`/api/barbers`).expect(expectedBarbers)
+            supertest(app)
+              .get(`/api/barbers`)
+              .expect(
+                expectedBarbers.map(barber => {
+                  return { ...barber, services: null };
+                })
+              )
           );
       });
     });
