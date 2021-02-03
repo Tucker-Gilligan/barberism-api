@@ -75,7 +75,7 @@ barberRouter
           () => {
             res
               .status(201)
-              .location(`https://peaceful-spire-85438.herokuapp.com/${id}`)
+              .location(`https://peaceful-spire-85438.herokuapp.com/api/${id}`)
               .json(barber);
           }
         );
