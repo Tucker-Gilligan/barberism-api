@@ -15,7 +15,6 @@ const serializeBarber = barber => ({
   email: barber.email,
 });
 
-//name, location, website_url, description, phone, email;
 barberRouter
   .route('/')
   .get((req, res, next) => {
@@ -52,15 +51,12 @@ barberRouter
     };
 
     if (!barber_name) {
-      // logger.error(`Name is required`);
       return res.status(400).json('need name');
     }
     if (!barber_location) {
-      // logger.error(`Location is required`);
       return res.status(400).json('need location');
     }
     if (!phone_number && !email) {
-      // logger.error(`Phone number or email is required`);
       return res.status(400).json('need one method of contact');
     }
     const id = uuid();
@@ -106,14 +102,6 @@ barberRouter
   })
   .get((req, res, next) => {
     res.json(serializeBarber(res.barber));
-    //   {
-    //   barber_id: res.barber.barber_id,
-    //   barber_name: res.barber.barber_name,
-    //   barber_location: res.barber.barber_location,
-    //   services: res.barber.services,
-    //   phone_number: res.barber.phone_number,
-    //   email: res.barber.email,
-    // });
   })
 
   .delete((req, res, next) => {
@@ -121,7 +109,6 @@ barberRouter
     BarbersService.deleteBarber(knexInstance, req.params.barber_id)
       .then(() => {
         res.status(204).end();
-        console.log('deleting item at ID', req.params.barber_id);
       })
       .catch(next);
   })
@@ -157,7 +144,7 @@ barberRouter
       barberToUpdate
     )
       .then(numRowsAffected => {
-        res.status(204).end();
+        res.status(204).json().end();
       })
       .catch(next);
   });

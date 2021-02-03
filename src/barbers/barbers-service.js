@@ -1,39 +1,59 @@
 const BarbersService = {
   //retrieves all barbers barbers table
   getAllBarbers(db) {
-    return db.from('barber').select('*');
+    return db
+      .from('barber')
+      .select(
+        'barber.barber_id',
+        'barber_name',
+        'barber_location',
+        'phone_number',
+        'email',
+        db.raw(
+          "string_agg(distinct services.services_name, ',' order by services.services_name) as services"
+        )
+      )
+      .leftJoin(
+        'barber_services',
+        'barber_services.barber_id',
+        '=',
+        'barber.barber_id'
+      )
+      .leftJoin(
+        'services',
+        'barber_services.services_id',
+        '=',
+        'services.services_id'
+      )
+      .groupBy('barber.barber_id');
   },
   getBarbersByState(db, state) {
-    //  return db.select('*').from('barber');
-    return (
-      db
-        .from('barber')
-        .select(
-          'barber.barber_id',
-          'barber_name',
-          'barber_location',
-          'phone_number',
-          'email',
-          db.raw(
-            "string_agg(distinct services.services_name, ',' order by services.services_name) as services"
-          )
+    return db
+      .from('barber')
+      .select(
+        'barber.barber_id',
+        'barber_name',
+        'barber_location',
+        'phone_number',
+        'email',
+        db.raw(
+          "string_agg(distinct services.services_name, ',' order by services.services_name) as services"
         )
-        .leftJoin(
-          'barber_services',
-          'barber_services.barber_id',
-          '=',
-          'barber.barber_id'
-        )
-        .leftJoin(
-          'services',
-          'barber_services.services_id',
-          '=',
-          'services.services_id'
-        )
-        // .where({ barber_location: state })
-        .where('barber_location', 'ilike', state)
-        .groupBy('barber.barber_id')
-    );
+      )
+      .leftJoin(
+        'barber_services',
+        'barber_services.barber_id',
+        '=',
+        'barber.barber_id'
+      )
+      .leftJoin(
+        'services',
+        'barber_services.services_id',
+        '=',
+        'services.services_id'
+      )
+      .where('barber_location', 'ilike', state)
+      .groupBy('barber.barber_id');
   },
   insertBarber(db, newBarber) {
     return db
@@ -51,8 +71,6 @@ const BarbersService = {
   },
   getById(db, barber_id) {
     return db.from('barber').select('*').where('barber_id', barber_id).first();
-    // return db.select('*').from('barber').where('barber_id', barber_id);
-    // .first();
   },
   deleteBarber(db, barber_id) {
     return db

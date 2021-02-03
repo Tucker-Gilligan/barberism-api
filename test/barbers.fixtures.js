@@ -33,29 +33,6 @@ function makeBarbersArray() {
   ];
 }
 
-// const maliciousBarber = {
-//   barber_id: 911,
-//   barber_name: 'Taking over your computer in 3...2...1...',
-//   barber_location: 'Colorado',
-//   phone_number: 'Naughty naughty very naughty <script>alert("xss");</script>',
-//   email:
-//     '`Bad image <img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">. But not <strong>all</strong> bad.`',
-// };
-// const expectedBarber = {
-//   ...maliciousBarber,
-//   barber_id: 911,
-//   barber_name: 'Taking over your computer in 3...2...1...',
-//   phone_number: 'Naughty naughty very naughty <script>alert("xss");</script>',
-//   email:
-//     '`Bad image <img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">. But not <strong>all</strong> bad.`',
-// };
-// return {
-//   maliciousBarber,
-//   expectedBarber,
-// };
-// }
-
 module.exports = {
   makeBarbersArray,
-  // makeMaliciousBarber,
 };

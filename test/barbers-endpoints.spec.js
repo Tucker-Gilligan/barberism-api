@@ -46,7 +46,6 @@ describe('Barbers Endpoints', function () {
 
     context('Given there are barbers in the database', () => {
       const testBarbers = makeBarbersArray();
-      console.log('here are our test barbers', testBarbers);
       beforeEach('insert barbers', () => {
         return db
           .into('barber')
@@ -130,14 +129,14 @@ describe('Barbers Endpoints', function () {
   });
 
   describe(`DELETE /api/barbers/:barber_id`, () => {
-    context(`Given there are articles in the database`, () => {
+    context(`Given there are barbers in the database`, () => {
       const testBarbers = makeBarbersArray();
 
       beforeEach('insert barbers', () => {
         return db.into('barber').insert(testBarbers).returning('*');
       });
 
-      it('responds with 204 and removes the article', () => {
+      it('responds with 204 and removes the barber', () => {
         const barberToRemove = 2;
         const expectedBarbers = testBarbers.filter(
           barber => barber.barber_id !== barberToRemove
@@ -152,10 +151,3 @@ describe('Barbers Endpoints', function () {
     });
   });
 });
-
-//C//post
-//R//get all
-//R//get by id
-//R//get by state
-//U//patch
-//D//delete
