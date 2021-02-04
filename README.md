@@ -75,5 +75,21 @@ This endpoint allows users to delete barbers, which removes them from the list o
 
 ## Technology used
 
-- Client: ReactJS, CSS
-- API: Node.js, Express, PostgreSQL
+### Backend
+
+- Express for handling API requests
+- NodeJS for interacting with the file system
+- Postgrator for database migration
+- Mocha, Chai, Supertest for endpoints testing
+- Knex.js for interfacing with **PostgreSQL** database
+- Heroku for database and server deployment
+
+### Client:
+
+- ReactJS
+- react-router-dom for routing and in-app navigation
+- CSS (vanilla CSS)
+- Babel
+- Webpack
+- Vercel for deployment
+- Jest for testing
