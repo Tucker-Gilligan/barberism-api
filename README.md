@@ -41,11 +41,11 @@ Returns an array of all barbers located within the queried state, including a li
 ```
 
 - `barber_id` `- string` - uuid of a barber
-- ` barber_name``-string  ` - Name of the barber providing the service
-- ` barber_location``-string  ` - Location (state) of the barber providing the service
-- ` services``-array  ` - Array of services provided
-- ` phone_number``-string  ` - Phone number of the barber providing the service
-- ` email``-string  ` - Email of the barber providing the service
+- ` barber_name` `-string ` - Name of the barber providing the service
+- ` barber_location` `-string ` - Location (state) of the barber providing the service
+- ` services` `-array ` - Array of services provided
+- ` phone_number` `-string ` - Phone number of the barber providing the service
+- ` email` `-string ` - Email of the barber providing the service
 
 ### `POST /api/barbers`
 
