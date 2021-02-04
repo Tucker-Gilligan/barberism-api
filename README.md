@@ -1,5 +1,9 @@
 # Barberism API!
 
+## Live Deployment
+
+https://barberism-client.vercel.app/
+
 ## Summary
 
 This is the backend code for Baberism, an application which allows people with autism or sensory sensitivities to connect with barbers who are capable and willing to meet their individualized needs. Users of the application can request a list of barbers, request a barber by state, request a single barber, delete a barber, or update a barber's information.

@@ -7,6 +7,7 @@ const pg = require('pg');
 pg.defaults.ssl =
   process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false;
 
+//assign a variable to represent database connection
 const db = knex({
   client: 'pg',
   connection: DATABASE_URL,
@@ -15,6 +16,7 @@ const db = knex({
   },
 });
 
+//sets 'db' to our established database connection
 app.set('db', db);
 
 app.listen(PORT, () => {
